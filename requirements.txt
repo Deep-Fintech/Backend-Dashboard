@@ -1,6 +1,11 @@
-Flask==1.1.2
-Flask-Cors==3.0.10
-Flask-SocketIO==5.1.1
-Keras==2.4.3
-Keras-Preprocessing==1.1.2
-python-binance==1.0.12
+Flask
+flask_socketio
+binance
+requests=2.27.1
+python-binance
+flask_cors=3.0.10
+pandas
+sklearn
+keras
+tensorflow
+talib
