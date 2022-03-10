@@ -1,6 +1,12 @@
-Flask==1.1.2
+TA-Lib==0.4.24
+tensorflow==2.8.0
+keras==2.8.0
+sklearn==0.0
+pandas==1.4.1
 Flask-Cors==3.0.10
+python-binance==1.0.15
+requests==2.27.1
+binance==0.3
 Flask-SocketIO==5.1.1
-Keras==2.4.3
-Keras-Preprocessing==1.1.2
-python-binance==1.0.12
+Flask==2.0.3
+gunicorn==20.1.0
