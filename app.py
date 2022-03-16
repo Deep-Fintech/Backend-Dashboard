@@ -113,4 +113,4 @@ def send_kline(data):
 
 if __name__ == '__main__':
     # main()
-    app.run()
+    socketio.run(app)
