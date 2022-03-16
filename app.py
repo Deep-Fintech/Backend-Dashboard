@@ -45,6 +45,9 @@ def hello():
     main()
     return 'KLine live update done'
 
+@app.route('/hello')
+def helloDeepFintech():
+    return 'Hello Deep Fintech!'
 
 @socketio.on('connect')
 def connected():
@@ -110,4 +113,4 @@ def send_kline(data):
 
 if __name__ == '__main__':
     # main()
-    app.run(debug=True)
+    app.run()
