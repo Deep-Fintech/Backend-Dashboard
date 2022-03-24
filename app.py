@@ -9,10 +9,10 @@ from predict.PredictSingleStep import predict_singlestep_api
 from predict.PredictSingleStepWithABCD import predict_singlestep_ABCD_api
 from predict.PredictByB1 import predict_by_B1, predict_by_B1_API
 from predict.PredictByB2 import predict_by_B2, predict_by_B2_API
+import time
 from predict.PredictByB4 import predict_by_B4, predict_by_B4_API
 from keys.Keys import api_key, api_secret
 import threading
-import time
 
 # import method
 from predict.PredictSingleStepWithABCD import predict_single_step
@@ -29,7 +29,7 @@ CORS(app)
 # app.register_blueprint(predict_by_B2_API)
 # app.register_blueprint(predict_by_B4_API)
 
-socketio = SocketIO(app, cors_allowed_origins="*",  async_mode='threading')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 
 def main():
@@ -45,9 +45,11 @@ def hello():
     main()
     return 'KLine live update done'
 
+
 @app.route('/hello')
 def helloDeepFintech():
     return 'Hello Deep Fintech!'
+
 
 @socketio.on('connect')
 def connected():
@@ -55,6 +57,7 @@ def connected():
 
 
 model_price = []
+
 
 # Prediction by our model
 
@@ -90,7 +93,23 @@ def send_prediction_B3():
 
 @socketio.on('send_kline')
 def send_kline(data):
+    kline = {
+        'time': round((data['k']['t']) / 1000),
+        'open': float(data['k']['o']),
+        'high': float(data['k']['h']),
+        'low': float(data['k']['l']),
+        'close': float(data['k']['c']),
+        'status': data['k']['x']
+    }
+    # print(json.dumps(kline))
+    socketio.emit('KLINE', kline)
     if (data['k']['x']):
+        closeKLINE = {
+            'time': round((data['k']['t']) / 1000),
+            'close': float(data['k']['c']),
+        }
+        socketio.emit('CLOSE', closeKLINE)
+        print("CLOSE : ", float(data['k']['c']))
         time.sleep(2)
         # threading.Thread(target=send_prediction).start()
         # threading.Thread(target=send_prediction_B1).start()
@@ -100,17 +119,10 @@ def send_kline(data):
         send_prediction_B1()
         send_prediction_B2()
         send_prediction_B3()
-    kline = {
-        'time': round(data['k']['t']/1000),
-        'open': float(data['k']['o']),
-        'high': float(data['k']['h']),
-        'low': float(data['k']['l']),
-        'close': float(data['k']['c'])
-    }
-    # print(json.dumps(kline))
-    socketio.emit('KLINE', kline)
 
 
 if __name__ == '__main__':
     # main()
     socketio.run(app)
+
+name = "dff"
