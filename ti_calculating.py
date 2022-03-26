@@ -1,5 +1,10 @@
-from talib import MA, WMA, DEMA, TEMA, DX, ADX, ADXR, MFI, PPO, BBANDS, T3, TRIMA, TRIX, WILLR, ULTOSC, MOM, WCLPRICE, NATR, HT_DCPHASE, HT_DCPERIOD,  HT_TRENDLINE, ADOSC, OBV, EMA, MACD, ROC, CCI, ATR, RSI, AD, APO, MIDPOINT, MIDPRICE
+from talib import *
 import pandas as pd
+
+
+def calculate_ma(close_df, time_period):
+    real_df = MA(close_df, timeperiod=time_period, matype=0)
+    return real_df
 
 
 def calculate_wma(close_df):
@@ -43,9 +48,9 @@ def calculate_ppo(close_df):
     return ppo_df
 
 
-def calculate_bbands(close_df):
+def calculate_bbands(close_df, time_period):
     upperband, middleband, lowerband = BBANDS(
-        close_df, timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
+        close_df, timeperiod=time_period, nbdevup=2, nbdevdn=2, matype=0)
     bbands = pd.DataFrame(
         {
             "upperband": upperband,
@@ -123,13 +128,6 @@ def calculate_obv(close_df, volume_df):
     obv_df = OBV(close_df, volume_df)
     return obv_df
 
-# Calculate Moving Average (simple)
-
-
-def calculate_ma(close_df, timeperiod):
-    ma = MA(close_df, timeperiod, matype=0)
-    return ma
-
 
 def calculate_ema(close_df):
     ema_df = EMA(close_df, timeperiod=14)
@@ -164,8 +162,8 @@ def calculate_atr(high_df, low_df, close_df):
     return atr
 
 
-def calculate_rsi(close_df):
-    rsi = RSI(close_df, timeperiod=14)
+def calculate_rsi(close_df, time_period):
+    rsi = RSI(close_df, timeperiod=time_period)
     return rsi
 
 
