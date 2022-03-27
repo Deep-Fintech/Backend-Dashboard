@@ -5,7 +5,7 @@ import json
 from flask_cors import CORS
 from predict.Predict import predict_api
 # from PredictSingleStep import predict_singlestep_api
-from predict.PredictSingleStep import predict_singlestep_api
+# from predict.PredictSingleStep import predict_singlestep_api
 from predict.PredictSingleStepWithABCD import predict_singlestep_ABCD_api
 from predict.PredictByB1 import predict_by_B1, predict_by_B1_API
 from predict.PredictByB2 import predict_by_B2, predict_by_B2_API
@@ -18,6 +18,7 @@ import threading
 from predict.PredictSingleStepWithABCD import predict_single_step
 from predict.PredictWithDilankaABCD import predict_single_step_by_Dil
 from profit.Profit import getActionProfit
+from predict.PredictSingleStep import predict_single_step_final
 
 app = Flask(__name__)
 CORS(app)
@@ -30,6 +31,8 @@ CORS(app)
 # app.register_blueprint(predict_by_B4_API)
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+
+test_condition = False
 
 
 def main():
@@ -64,6 +67,7 @@ model_price = []
 
 @socketio.on('send_prediction')
 def send_prediction():
+    # data = predict_single_step_final()
     data = predict_single_step()
     print("Data from App.py", data)
     socketio.emit('PREDICTION', data)
@@ -85,7 +89,6 @@ def send_prediction_B2():
 
 @socketio.on('send_prediction_B3')  # Prediction  by benchmark three
 def send_prediction_B3():
-    time.sleep(2)
     data = predict_by_B4()
     print("Data from B3", data)
     socketio.emit("PREDICTION_B3", data)
@@ -101,10 +104,13 @@ def send_kline(data):
         'close': float(data['k']['c']),
         'status': data['k']['x']
     }
+
     # print(json.dumps(kline))
     socketio.emit('KLINE', kline)
+
     if (data['k']['x']):
         closeKLINE = {
+            # 'time': round((data['k']['t'] + 1*60*1000) / 1000),
             'time': round((data['k']['t']) / 1000),
             'close': float(data['k']['c']),
         }
@@ -115,14 +121,12 @@ def send_kline(data):
         # threading.Thread(target=send_prediction_B1).start()
         # threading.Thread(target=send_prediction_B2).start()
         # threading.Thread(target=send_prediction_B3).start()
+
         send_prediction()
         send_prediction_B1()
         send_prediction_B2()
         send_prediction_B3()
-
-
+    
 if __name__ == '__main__':
     # main()
     socketio.run(app)
-
-name = "dff"

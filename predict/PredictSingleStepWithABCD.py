@@ -304,7 +304,7 @@ def predict_single_step():
     # Hull Moving Average
     df_kline = getHullMA(df_kline)
 
-    df_kline = df_kline.iloc[-21:, :]
+    df_kline = df_kline.iloc[-15:, :]
 
     columns_to_scale = ['open', 'high', 'low', 'close',
                         'volume', 'approx', 'app_highs', 'app_lows']
@@ -318,7 +318,7 @@ def predict_single_step():
     X = []
 
     for i in range(2):
-        X.append(scaled_kline_data[i:i+20])
+        X.append(scaled_kline_data[i:i+14])
 
     X = np.array(X)
 
